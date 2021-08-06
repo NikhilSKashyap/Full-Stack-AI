@@ -10,7 +10,7 @@ import base64
 from typing import List
 from PIL import Image
 import uvicorn
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, File
 from starlette.responses import StreamingResponse
 from fastapi.responses import FileResponse
 from fastapi.encoders import jsonable_encoder
@@ -31,10 +31,11 @@ gunicorn_logger = logging.getLogger('gunicorn.error')
 logger.handlers = gunicorn_logger.handlers
 
 class Data(BaseModel):
-    base64: str
+    base64str: str
+
 
 @app.post("/predict/")
-async def main(data: Data):
+async def main(data:Data):
     model = Net()
     model.load_state_dict(torch.load(
         'mnist_cnn.pt', map_location=torch.device('cpu')))
@@ -48,12 +49,14 @@ async def main(data: Data):
         transforms.Normalize((0.1307,), (0.3081,)),
     ])
 
-    img = Image.open(os.path.join("../storage/"+data.base64))
+    base64_img_bytes =data.base64str.encode('utf-8')
+    img = Image.open(BytesIO(base64.b64decode(base64_img_bytes)))
+
     output = model(torch.unsqueeze(
         transform(img.convert('L')), 0))
     
     pred = int(output.argmax(dim=1, keepdim=True))
-    
+
     return pred
 
 if __name__ != '__main__':
