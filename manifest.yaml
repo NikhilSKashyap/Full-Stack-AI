@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: full-stack-ai
+  labels:
+    app: full-stack-ai
+  
+spec:
+  selector:
+    matchLabels:
+      app: full-stack-ai
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: full-stack-ai
+    spec:
+      volumes:
+        - name: shared-logs
+          emptyDir: {}
+      containers:
+        - name: full-stack-ai
+          image: nikhilskashyap/mnist:latest
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          ports:
+          - containerPort: 80
+          imagePullPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: full-stack-ai
+  labels:
+    app: full-stack-ai
+
+spec:
+  type: LoadBalancer #NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: full-stack-ai
