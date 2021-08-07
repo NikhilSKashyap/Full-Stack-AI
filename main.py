@@ -33,8 +33,11 @@ logger.handlers = gunicorn_logger.handlers
 class Data(BaseModel):
     base64str: str
 
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
 
-@app.post("/predict/")
+@app.post("/predict")
 async def main(data:Data):
     model = Net()
     model.load_state_dict(torch.load(
@@ -57,7 +60,7 @@ async def main(data:Data):
     
     pred = int(output.argmax(dim=1, keepdim=True))
 
-    return pred
+    return {"pred":str(pred)}
 
 if __name__ != '__main__':
     logger.setLevel(gunicorn_logger.level)
