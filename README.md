@@ -10,11 +10,11 @@ The requirements and the provided sample codes serve a purpose to simulate a typ
 - [Project Setup](#project-setup)
 - [Architecture](#architecture)
 - [Tasks](#tasks)
-    1. [Prepare a MNIST deep learning model](#prepare-a-mnist-deep-learning-model).
-    2. Fine-tune [FashionMNIST](https://pytorch.org/vision/stable/datasets.html#fashion-mnist) model.]
-    3. Initiate a simple RESTful API backend server for hosting the model.
-    4. Containerise the backend server.
-    5. Set up a local Kubernetes cluster and deploy the service on it. 
+    1. [Prepare a MNIST deep learning model](#prepare-a-mnist-deep-learning-model)
+    2. [Fine-tune FashionMNIST model](#fine-tune-fashionmnist-model)
+    3. [Initiate a simple RESTful API backend server for hosting the model](#initiate-a-simple-restful-api-backend-server-for-hosting-the-model)
+    4. [Containerise the backend server](#containerise-the-backend-server)
+    5. [Set up a local Kubernetes cluster and deploy the service on it](#set-up-a-local-kubernetes-cluster-and-deploy-the-service-on-it) 
 
 ## Project Setup
 
@@ -146,6 +146,74 @@ This MVP consists of a **PyTorch** inference module, **FastAPI** as RESTful API 
 
 ## Tasks
 
-### 1. Prepare a MNIST deep learning model.
+### **1. Prepare a MNIST deep learning model.**
 
-### 2. Fine-tune [FashionMNIST](https://pytorch.org/vision/stable/datasets.html#fashion-mnist) model.
+!['MNIST'](Images/mnist_samples.png)
+
+MNIST ("Modified National Institute of Standards and Technology") is the de facto “hello world” dataset of computer vision. Since its release in 1999, this classic dataset of handwritten images has served as the basis for benchmarking classification algorithms. As new machine learning techniques emerge, MNIST remains a reliable resource for researchers and learners alike. The MNIST database contains 60,000 training images and 10,000 testing images. The training and testing were downloaded from Pytorch Dataset [MNIST](https://pytorch.org/vision/stable/datasets.html#mnist). 
+
+A trained model was downloaded from [here](https://artifacts.instill.tech/mnist_cnn.pt). You can find the inference script as `infer_mnist.py`.
+
+### **2. Fine-tune FashionMNIST model.**
+
+Similar to the MNIST problem, training and testing was downloaded from [FashionMNIST](https://pytorch.org/vision/stable/datasets.html#fashion-mnist) Pytorch Dataset. You can find the inference script as `infer_fmnist.py`.
+
+You can find the training script as fashion_mnist.py. Hyperparms used to train the script are -
+* `Training Batch Size` - 32
+* `Testing Batch Size` - 32
+* `Num of workers` - 4
+* `Epochs` - 10
+* `Learning Rate` - 0.001
+* `Gamma` - 0.9
+* `Optimizer` - Adam (performed better than AdaDelta)
+* `Loss Function` - nll_loss 
+
+Validation Accuracy was increased from 80% to `92%` with the above hyperparam configuration. 
+
+**Future Experiments** - 
+
+* Cross Entropy loss function can be used and observed against nll_loss. 
+
+### **3. Initiate a simple RESTful API backend server for hosting the model.**
+
+For this particular task, I used `FastAPI`. FastAPI is a modern, fast (high-performance), web framework for building APIs. FastAPI(`main.py`) in this project has been configured to use http://0.0.0.0:80 as `base URL`. http://0.0.0.0:80/mnist invokes `infer_mnist` script. http://0.0.0.0:80/fmnist invokes `infer_fmnist` script. 
+
+**Advantages**
+* `Fast`: Very high performance, on par with NodeJS and Go (thanks to Starlette and Pydantic)
+* `Pythonic`: Minimal coding.
+* One of the major drawbacks with `flask` is it has `no asysnc` support. Whereas, `FastAPI overcomes that challenge`. 
+
+**Disadvantages**
+* Handling requests validation with Pydantic is not straight forward. 
+
+### **4. Containerise the backend server.**
+
+I have used `Docker` to containarise the backend server. 
+
+**Advantages**
+* Major advantage of Docker is `portability across machines`.
+* `Quick application deployment` - Containers include the minimal runtime requirements of the application, reducing their size and allowing them to be deployed quickly. 
+* `Sharing` – you can use a remote repository to share your container with others.
+
+**Disadvantages**
+* With respect to this particular project, I did not find Docker working well with frontend. 
+* Running as non-root was a problem. I could not run in WSL. 
+
+### **5. Set up a local Kubernetes cluster and deploy the service on it**
+
+I have set up a kubernetes cluster using `manifest.yaml` file, where docker can be deployed as a service. 
+
+**Advantages**
+* `VMWare of containers`. 
+* `Multi-cloud support`. 
+* `Easier monitoring with dashboard`. 
+
+**Disadvantages**
+* I found Kubernetes complex to run with docker-compose. 
+
+
+
+
+
+
+
