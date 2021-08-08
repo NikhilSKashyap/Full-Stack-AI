@@ -8,5 +8,8 @@ RUN pip install torch==1.7.1+cpu torchvision==0.8.2+cpu torchaudio==0.7.2 -f htt
 
 EXPOSE 80
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
+EXPOSE 8501
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"] && ["streamlit", "run", "app.py"]
+
 

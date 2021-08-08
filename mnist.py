@@ -138,7 +138,7 @@ def train_mnist():
             break
 
     if args.save_model:
-        torch.save(model.to('cpu').state_dict(), "fmnist_cnn.pt")
+        torch.save(model.to('cpu').state_dict(), "../models/mnist_cnn.pt")
 
 
 def finetune_mnist(model: Net,
