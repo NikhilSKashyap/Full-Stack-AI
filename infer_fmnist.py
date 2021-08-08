@@ -15,10 +15,21 @@ def infer_fmnist(base64str):
     """
     model = Net()
     model.load_state_dict(torch.load(
-        'models/fmnist_cnn.pt', map_location=torch.device('cpu')))
+        'fmnist_cnn.pt', map_location=torch.device('cpu')))
     model.eval()
 
-    mnist_dts_val = datasets.FashionMNIST('data', train=False, download=False)
+    output_mapping =  {
+                 0: "T-shirt/Top",
+                 1: "Trouser",
+                 2: "Pullover",
+                 3: "Dress",
+                 4: "Coat", 
+                 5: "Sandal", 
+                 6: "Shirt",
+                 7: "Sneaker",
+                 8: "Bag",
+                 9: "Ankle Boot"
+                 }
 
     transform = transforms.Compose([
         transforms.Resize((28, 28)),
@@ -34,4 +45,4 @@ def infer_fmnist(base64str):
     
     pred = int(output.argmax(dim=1, keepdim=True))
 
-    return {"pred":mnist_dts_val.classes[pred]}
+    return {"pred":output_mapping[pred]}
