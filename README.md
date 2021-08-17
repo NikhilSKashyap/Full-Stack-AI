@@ -1,9 +1,4 @@
-# Simple Vision-AI-as-a-service <!-- omit in toc -->
-
-[Instill](https://instill.tech/) Full Stack AI Engineer assignment. 
-
-## Problem Statement
-The requirements and the provided sample codes serve a purpose to simulate a typical scenario when AI/ML engineers in a MLOps team pass a working deep learning model to a DevOps team to deploy it on production. We expect a Full Stack AI Engineer can independently handle this end-to-end development and deployment journey.
+# Full Stack AI <!-- omit in toc -->
 
 ## Table of content <!-- omit in toc -->
 
@@ -148,7 +143,7 @@ This MVP consists of a **PyTorch** inference module, **FastAPI** as RESTful API 
 
 ### **1. Prepare a MNIST deep learning model.**
 
-!['MNIST'](Images/mnist_samples.png)
+!['MNIST'](Images/MNIST_samples.png)
 
 MNIST ("Modified National Institute of Standards and Technology") is the de facto “hello world” dataset of computer vision. Since its release in 1999, this classic dataset of handwritten images has served as the basis for benchmarking classification algorithms. As new machine learning techniques emerge, MNIST remains a reliable resource for researchers and learners alike. The MNIST database contains 60,000 training images and 10,000 testing images. The training and testing were downloaded from Pytorch Dataset [MNIST](https://pytorch.org/vision/stable/datasets.html#mnist). 
 
